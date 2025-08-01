@@ -39,3 +39,18 @@
 
 # debug information files
 *.dwo
+
+
+# IDE
+.vscode/
+.idea/
+
+# output
+cmake_build/
+cmake-build-debug/
+build/
+.cache/
+logs/
+*.pyc
+logs/
+code_coverage/
