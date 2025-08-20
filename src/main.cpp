@@ -87,7 +87,7 @@ main(int argc, char* argv[]) {
 
     // create index (required after 2.2.0)
     milvus::IndexDesc index_vector(field_face, "", milvus::IndexType::IVF_FLAT, milvus::MetricType::COSINE);
-    index_vector.AddExtraParam(milvus::KeyNlist(), "100");
+    index_vector.AddExtraParam(milvus::NLIST, "100");
     status = client->CreateIndex(collection_name, index_vector);
     util::CheckStatus("Failed to create index on vector field:", status);
     std::cout << "Successfully create index." << std::endl;
@@ -141,7 +141,7 @@ main(int argc, char* argv[]) {
         status = client->Query(q_count, count_resutl);
         util::CheckStatus("Failed to query count(*):", status);
         std::cout << "Successfully query count(*) on partition." << std::endl;
-        std::cout << "partition count(*) = " << count_resutl.GetCountNumber() << std::endl;
+        std::cout << "partition count(*) = " << count_resutl.GetRowCount() << std::endl;
     }
 
     {
