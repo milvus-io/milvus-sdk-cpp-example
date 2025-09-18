@@ -25,8 +25,10 @@ namespace util {
 void
 CheckStatus(std::string&& prefix, const milvus::Status& status) {
     if (!status.IsOk()) {
-        std::cout << prefix << " " << status.Message() << std::endl;
+        std::cout << "Failed to " << prefix << ", error: " << status.Message() << std::endl;
         exit(1);
+    } else {
+        std::cout << "Succeed to " << prefix << std::endl;
     }
 }
 
@@ -51,13 +53,12 @@ main(int argc, char* argv[]) {
 
     milvus::ConnectParam connect_param{"localhost", 19530, "root", "Milvus"};
     auto status = client->Connect(connect_param);
-    util::CheckStatus("Failed to connect milvus server:", status);
-    std::cout << "Connect to milvus server." << std::endl;
+    util::CheckStatus("connect to milvus server", status);
 
     // print the server version
     std::string version;
     status = client->GetVersion(version);
-    util::CheckStatus("Failed to get server version:", status);
+    util::CheckStatus("get server version", status);
     std::cout << "The milvus server version is: " << version << std::endl;
 
     // drop the collection if it exists
@@ -82,29 +83,25 @@ main(int argc, char* argv[]) {
         milvus::FieldSchema(field_face, milvus::DataType::FLOAT_VECTOR, "face signature").WithDimension(dimension));
 
     status = client->CreateCollection(collection_schema);
-    util::CheckStatus("Failed to create collection:", status);
-    std::cout << "Successfully create collection " << collection_name << std::endl;
+    util::CheckStatus("create collection " + collection_name, status);
 
     // create index (required after 2.2.0)
     milvus::IndexDesc index_vector(field_face, "", milvus::IndexType::IVF_FLAT, milvus::MetricType::COSINE);
     index_vector.AddExtraParam(milvus::NLIST, "100");
     status = client->CreateIndex(collection_name, index_vector);
-    util::CheckStatus("Failed to create index on vector field:", status);
-    std::cout << "Successfully create index." << std::endl;
+    util::CheckStatus("create index on vector field", status);
 
     milvus::IndexDesc index_varchar(field_name, "", milvus::IndexType::TRIE);
     status = client->CreateIndex(collection_name, index_varchar);
-    util::CheckStatus("Failed to create index on varchar field:", status);
-    std::cout << "Successfully create index." << std::endl;
+    util::CheckStatus("create index on varchar field", status);
 
     milvus::IndexDesc index_sort(field_age, "", milvus::IndexType::STL_SORT);
     status = client->CreateIndex(collection_name, index_sort);
-    util::CheckStatus("Failed to create index on integer field:", status);
-    std::cout << "Successfully create index." << std::endl;
+    util::CheckStatus("create index on integer field", status);
 
     // tell server prepare to load collection
     status = client->LoadCollection(collection_name);
-    util::CheckStatus("Failed to load collection:", status);
+    util::CheckStatus("load collection " + collection_name, status);
 
     // insert some rows
     const int64_t row_count = 1000;
@@ -126,7 +123,7 @@ main(int argc, char* argv[]) {
         std::make_shared<milvus::FloatVecFieldData>(field_face, insert_vectors)};
     milvus::DmlResults dml_results;
     status = client->Insert(collection_name, "", fields_data, dml_results);
-    util::CheckStatus("Failed to insert:", status);
+    util::CheckStatus("insert", status);
     std::cout << "Successfully insert " << dml_results.IdArray().IntIDArray().size() << " rows." << std::endl;
 
     {
@@ -139,8 +136,7 @@ main(int argc, char* argv[]) {
 
         milvus::QueryResults count_resutl{};
         status = client->Query(q_count, count_resutl);
-        util::CheckStatus("Failed to query count(*):", status);
-        std::cout << "Successfully query count(*) on partition." << std::endl;
+        util::CheckStatus("query count(*)", status);
         std::cout << "partition count(*) = " << count_resutl.GetRowCount() << std::endl;
     }
 
@@ -158,11 +154,13 @@ main(int argc, char* argv[]) {
         std::cout << "Query with expression: " << q_arguments.Filter() << std::endl;
         milvus::QueryResults query_resutls{};
         status = client->Query(q_arguments, query_resutls);
-        util::CheckStatus("Failed to query:", status);
-        std::cout << "Successfully query." << std::endl;
+        util::CheckStatus("query", status);
 
-        for (auto& field_data : query_resutls.OutputFields()) {
-            std::cout << "Field: " << field_data->Name() << " Count:" << field_data->Count() << std::endl;
+        milvus::EntityRows rows;
+        status = query_resutls.OutputRows(rows);
+        util::CheckStatus("get output rows", status);
+        for (auto& row : rows) {
+            std::cout << "\t" << row.dump() << std::endl;
         }
     }
 
@@ -188,8 +186,7 @@ main(int argc, char* argv[]) {
 
         milvus::SearchResults search_results{};
         status = client->Search(s_arguments, search_results);
-        util::CheckStatus("Failed to search:", status);
-        std::cout << "Successfully search." << std::endl;
+        util::CheckStatus("search", status);
 
         for (auto& result : search_results.Results()) {
             auto& ids = result.Ids().IntIDArray();
@@ -201,36 +198,28 @@ main(int argc, char* argv[]) {
 
             std::cout << "Result of one target vector:" << std::endl;
 
-            auto name_field = result.OutputField<milvus::VarCharFieldData>(field_name);
-            auto age_field = result.OutputField<milvus::Int8FieldData>(field_age);
-            for (size_t i = 0; i < ids.size(); ++i) {
-                std::cout << "\t" << result.PrimaryKeyName() << ":" << ids[i] << "\tDistance: " << distances[i] << "\t"
-                          << name_field->Name() << ":" << name_field->Value(i) << "\t" << age_field->Name() << ":"
-                          << +(age_field->Value(i)) << std::endl;
-                // validate the age value
-                if (insert_ages[ids[i]] != age_field->Value(i)) {
-                    std::cout << "ERROR! The returned value doesn't match the inserted value" << std::endl;
-                }
+            milvus::EntityRows rows;
+            status = result.OutputRows(rows);
+            util::CheckStatus("get output rows", status);
+            for (auto& row : rows) {
+                std::cout << "\t" << row.dump() << std::endl;
             }
         }
     }
 
     // release collection
     status = client->ReleaseCollection(collection_name);
-    util::CheckStatus("Failed to release collection:", status);
-    std::cout << "Release collection " << collection_name << std::endl;
+    util::CheckStatus("release collection " + collection_name, status);
 
     // drop index
     status = client->DropIndex(collection_name, field_face);
-    util::CheckStatus("Failed to drop index:", status);
-    std::cout << "Drop index for field: " << field_face << std::endl;
+    util::CheckStatus("drop index for field " + field_face, status);
 
     // drop collection
     status = client->DropCollection(collection_name);
-    util::CheckStatus("Failed to drop collection:", status);
-    std::cout << "Drop collection " << collection_name << std::endl;
+    util::CheckStatus("drop collection " + collection_name, status);
 
-    client->Disconnect();
-    std::cout << "Disconnect to milvus server." << std::endl;
+    status = client->Disconnect();
+    util::CheckStatus("disconnect to milvus server", status);
     return 0;
 }

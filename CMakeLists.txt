@@ -19,7 +19,10 @@ project(milvus_sdk_example LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_BUILD_TYPE "Release")
+
+if ( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Debug")
+endif ()
 
 include_guard(GLOBAL)
 include(FetchContent)

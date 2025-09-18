@@ -33,7 +33,8 @@ make rebuild_cache >/dev/null 2>&1
 
 
 CMAKE_CMD="cmake \
--DBUILD_SHARED_LIBS=ON \
+-DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+-DGRPC_PATH=${GRPC_PATH} \
 ../"
 echo ${CMAKE_CMD}
 ${CMAKE_CMD}
