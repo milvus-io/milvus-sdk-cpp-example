@@ -31,10 +31,10 @@ cd ${BUILD_OUTPUT_DIR}
 # force update the variables each time
 make rebuild_cache >/dev/null 2>&1
 
-
 CMAKE_CMD="cmake \
 -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
 -DGRPC_PATH=${GRPC_PATH} \
+-DBUILD_SHARED_LIBS=ON \
 ../"
 echo ${CMAKE_CMD}
 ${CMAKE_CMD}
