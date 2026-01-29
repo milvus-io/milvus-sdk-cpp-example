@@ -16,8 +16,8 @@
 
 #include <iostream>
 #include <random>
+#include <stdexcept>
 #include <string>
-#include <thread>
 
 #include "milvus/MilvusClientV2.h"
 
@@ -25,8 +25,7 @@ namespace util {
 void
 CheckStatus(std::string&& msg, const milvus::Status& status) {
     if (!status.IsOk()) {
-        std::cout << "Failed to " << msg << ", error: " << status.Message() << std::endl;
-        exit(1);
+        throw std::runtime_error("Failed to " + msg + ", error: " + status.Message());
     } else {
         std::cout << "Succeed to " << msg << std::endl;
     }
@@ -47,6 +46,7 @@ GenerateFloatVector(int dimension) {
 
 int
 main(int argc, char* argv[]) {
+  try {
     printf("Example start...\n");
 
     auto client = milvus::MilvusClientV2::Create();
@@ -230,4 +230,8 @@ main(int argc, char* argv[]) {
     status = client->Disconnect();
     util::CheckStatus("disconnect to milvus server", status);
     return 0;
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
 }

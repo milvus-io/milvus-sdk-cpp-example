@@ -44,13 +44,21 @@
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# output
+# Build directories
 cmake_build/
 cmake-build-debug/
 build/
 .cache/
+code_coverage/
+
+# Conan generated files
+**/CMakePresets.json
+**/CMakeUserPresets.json
+
+# Logs
 logs/
 *.pyc
-logs/
-code_coverage/

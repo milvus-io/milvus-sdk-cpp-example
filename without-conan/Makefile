@@ -13,17 +13,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 PWD 				:= $(shell pwd)
 BUILD_OUTPUT_DIR	:= cmake_build
 
 build:
 	@echo "Building ..."
-	@@(env bash $(PWD)/build.sh)
+	@bash build.sh
 
 clean:
 	@echo "Cleaning ..."
 	@rm -fr $(BUILD_OUTPUT_DIR)
+	@echo "Done"
 
 run:
 	@echo "Running ..."

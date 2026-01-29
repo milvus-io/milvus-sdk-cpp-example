@@ -16,14 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# export LD_LIBRARY_PATH=./libs/grpc_install/lib
-
 BUILD_OUTPUT_DIR="cmake_build"
 
+# Set build type to match Conan profile (Release)
+BUILD_TYPE="${BUILD_TYPE:-Release}"
 
+# Create build directory if it doesn't exist
 if [[ ! -d ${BUILD_OUTPUT_DIR} ]]; then
-  mkdir ${BUILD_OUTPUT_DIR}
+  mkdir -p ${BUILD_OUTPUT_DIR}
 fi
+
+# Install Conan dependencies into the build directory
+echo "Installing Conan dependencies into ${BUILD_OUTPUT_DIR}..."
+conan install . --output-folder=${BUILD_OUTPUT_DIR} --build=missing -s compiler.cppstd=14
 
 cd ${BUILD_OUTPUT_DIR}
 
@@ -33,11 +38,11 @@ make rebuild_cache >/dev/null 2>&1
 
 CMAKE_CMD="cmake \
 -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
--DGRPC_PATH=${GRPC_PATH} \
--DBUILD_SHARED_LIBS=ON \
+-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
+-DBUILD_FROM_CONAN=ON \
 ../"
+
 echo ${CMAKE_CMD}
 ${CMAKE_CMD}
 
-make -j12
-
+make -j8
