@@ -1,6 +1,6 @@
 # Milvus SDK C++ Example - With Conan
 
-This example demonstrates how to build a C++ application using the Milvus SDK with Conan package manager.
+This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) (v2.6.1) with Conan package manager.
 
 ## Prerequisites
 
@@ -36,17 +36,23 @@ Or manually:
 
 ```bash
 # Install Conan dependencies into the build directory
-conan install . --output-folder=cmake_build --build=missing -s compiler.cppstd=14
+conan install . --output-folder=cmake_build --build=missing -s compiler.cppstd=14 -s build_type=Release
 
 # Configure and build with CMake
 mkdir -p cmake_build && cd cmake_build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_FROM_CONAN=ON ../
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ../
 make -j8
 ```
 
 ## Run
 
 After successful build:
+
+```bash
+make run
+```
+
+Or directly:
 
 ```bash
 ./cmake_build/my_program

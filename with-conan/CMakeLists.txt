@@ -26,29 +26,27 @@ endif ()
 
 include_guard(GLOBAL)
 
-# Find Conan-provided dependencies first
-if(BUILD_FROM_CONAN)
-    find_package(gRPC CONFIG REQUIRED)
-    find_package(protobuf CONFIG REQUIRED)
-    find_package(absl CONFIG REQUIRED)
-    find_package(nlohmann_json CONFIG REQUIRED)
-    
-    message(STATUS "Using Conan-provided packages:")
-    message(STATUS "  gRPC found: ${gRPC_FOUND}")
-    message(STATUS "  Protobuf found: ${Protobuf_FOUND}")
-    message(STATUS "  Abseil found: ${absl_FOUND}")
-    message(STATUS "  nlohmann_json found: ${nlohmann_json_FOUND}")
-endif()
+# This example always uses Conan-provided dependencies
+set(BUILD_FROM_CONAN ON CACHE BOOL "Build from conan" FORCE)
+
+# Find Conan-provided dependencies
+find_package(gRPC CONFIG REQUIRED)
+find_package(protobuf CONFIG REQUIRED)
+find_package(absl CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+
+message(STATUS "Using Conan-provided packages:")
+message(STATUS "  gRPC found: ${gRPC_FOUND}")
+message(STATUS "  Protobuf found: ${Protobuf_FOUND}")
+message(STATUS "  Abseil found: ${absl_FOUND}")
+message(STATUS "  nlohmann_json found: ${nlohmann_json_FOUND}")
 
 include(FetchContent)
-
-# Set BUILD_FROM_CONAN=ON for milvus-sdk
-set(BUILD_FROM_CONAN ON CACHE BOOL "Build from conan" FORCE)
 
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           2.6
+    GIT_TAG           v2.6.1
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED TRUE

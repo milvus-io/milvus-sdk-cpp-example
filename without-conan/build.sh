@@ -19,7 +19,7 @@
 # export LD_LIBRARY_PATH=./libs/grpc_install/lib
 
 BUILD_OUTPUT_DIR="cmake_build"
-
+BUILD_TYPE="${BUILD_TYPE:-Debug}"
 
 if [[ ! -d ${BUILD_OUTPUT_DIR} ]]; then
   mkdir ${BUILD_OUTPUT_DIR}

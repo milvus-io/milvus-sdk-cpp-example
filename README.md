@@ -1,6 +1,6 @@
 # Milvus SDK C++ Examples
 
-Examples demonstrating how to use the Milvus C++ SDK in your project.
+Examples demonstrating how to use the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) (v2.6.1) in your project.
 
 ## Project Structure
 
@@ -28,14 +28,14 @@ milvus-sdk-cpp-example/
 ```bash
 cd without-conan
 make build
-./cmake_build/my_program
+make run
 ```
 
 ### With Conan (Pre-built dependencies)
 ```bash
 cd with-conan
 make build
-./cmake_build/my_program
+make run
 ```
 
 ## Comparison
@@ -45,7 +45,7 @@ make build
 | **BUILD_FROM_CONAN** | OFF | ON |
 | **Package Manager** | None | Conan 2.x |
 | **Dependencies** | Built from source (FetchContent) | Pre-built packages |
-| **Build Time** | always slow | fast after the first time |
+| **Build Time** | Always slow | Fast after the first time |
 | **Disk Usage** | Per-project | Shared cache |
 | **Prerequisites** | CMake + Git | CMake + Git + Conan |
 

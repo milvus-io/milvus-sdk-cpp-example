@@ -30,4 +30,4 @@ run:
 	@echo "Running ..."
 	@$(BUILD_OUTPUT_DIR)/my_program
 
-.PHONY: build clean
+.PHONY: build clean run

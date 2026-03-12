@@ -143,7 +143,6 @@ main(int argc, char* argv[]) {
     status = client->Insert(
         milvus::InsertRequest().WithCollectionName(collection_name).WithRowsData(std::move(rows)), resp_insert);
     util::CheckStatus("insert", status);
-    util::CheckStatus("insert", status);
     std::cout << "Successfully insert " << resp_insert.Results().InsertCount() << " rows." << std::endl;
 
     {

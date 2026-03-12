@@ -1,6 +1,6 @@
 # Milvus SDK C++ Example - Without Conan
 
-This example demonstrates how to build a C++ application using the Milvus SDK without a package manager. All dependencies are built from source via CMake FetchContent.
+This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) (v2.6.1) without a package manager. All dependencies are built from source via CMake FetchContent.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ make build
 
 ### Build with a specific BUILD_TYPE
 
-By default, the build type is unset (CMake defaults to empty/Debug). You can specify it:
+By default, the build type is Debug. You can specify it:
 
 ```bash
 make build BUILD_TYPE=Release
@@ -76,5 +76,5 @@ Make sure you have an active Milvus server before running.
 
 - The first build downloads and compiles gRPC and all its dependencies from source, which is significantly slower than subsequent builds.
 - The output of milvus-sdk-cpp is a shared library `libmilvus_sdk.so` under `cmake_build/_deps/milvus-sdk-build/src`. It dynamically links to gRPC libs.
-- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/2.6/cmake/ThirdPartyPackages.cmake) in the SDK repo).
+- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/v2.6.1/cmake/ThirdPartyPackages.cmake) in the SDK repo).
 

@@ -1,3 +1,5 @@
+# Dependency versions matching milvus-sdk-cpp v2.6.1
+# Update these together when upgrading the SDK version in CMakeLists.txt
 [requires]
 grpc/1.67.1
 protobuf/5.27.0

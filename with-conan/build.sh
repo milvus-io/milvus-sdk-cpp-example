@@ -28,7 +28,7 @@ fi
 
 # Install Conan dependencies into the build directory
 echo "Installing Conan dependencies into ${BUILD_OUTPUT_DIR}..."
-conan install . --output-folder=${BUILD_OUTPUT_DIR} --build=missing -s compiler.cppstd=14
+conan install . --output-folder=${BUILD_OUTPUT_DIR} --build=missing -s compiler.cppstd=14 -s build_type=${BUILD_TYPE}
 
 cd ${BUILD_OUTPUT_DIR}
 
