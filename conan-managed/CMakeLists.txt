@@ -13,21 +13,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-PWD 				:= $(shell pwd)
-BUILD_OUTPUT_DIR	:= cmake_build
 
-build:
-	@echo "Building ..."
-	@bash build.sh
+cmake_minimum_required(VERSION 3.14)
+project(milvus_sdk_example_conan_managed LANGUAGES CXX C)
 
-clean:
-	@echo "Cleaning ..."
-	@rm -fr $(BUILD_OUTPUT_DIR)
-	@rm -f CMakeUserPresets.json
-	@echo "Done"
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-run:
-	@echo "Running ..."
-	@$(BUILD_OUTPUT_DIR)/my_program
+if ( "${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Debug")
+endif ()
 
-.PHONY: build clean run
+include_guard(GLOBAL)
+
+# Find milvus-sdk-cpp installed by Conan
+find_package(milvus-sdk-cpp CONFIG REQUIRED)
+
+# Build example executable
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src src_files)
+add_executable(my_program ${src_files})
+
+target_link_libraries(my_program milvus-sdk-cpp::milvus-sdk-cpp)

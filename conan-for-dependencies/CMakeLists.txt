@@ -17,7 +17,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(milvus_sdk_example_with_conan LANGUAGES CXX C)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 if ( "${CMAKE_BUILD_TYPE}" STREQUAL "")
@@ -46,7 +46,7 @@ include(FetchContent)
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           v2.6.1
+    GIT_TAG           v2.6.2
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED TRUE

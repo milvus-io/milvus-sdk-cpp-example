@@ -1,6 +1,6 @@
-# Milvus SDK C++ Example - With Conan
+# Milvus SDK C++ Example - Conan for Dependencies
 
-This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) (v2.6.1) with Conan package manager.
+This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) with Conan managing the SDK's dependencies.
 
 ## Prerequisites
 
@@ -11,22 +11,28 @@ This example demonstrates how to build a C++ application using the [Milvus C++ S
 ## Configuration
 
 This example uses:
+- **FetchContent** downloads milvus-sdk-cpp from GitHub
 - **BUILD_FROM_CONAN=ON**: The milvus-sdk-cpp library will use Conan-managed dependencies (gRPC, Protobuf, Abseil, etc.)
 - **Conan**: Manages all third-party dependencies
 
 ## Dependencies
 
-The following packages are managed by Conan (see `conanfile.txt`):
-- gRPC 1.67.1
+The following packages are managed by Conan (see `conanfile.py`):
+- gRPC 1.65.0
 - Protobuf 5.27.0
 - Abseil 20240116.2
 - nlohmann_json 3.11.3
 
 ## Build Instructions
 
+`make` is equivalent to `make build`.
+
 ```bash
-# Build the project
-make build
+# Default: static link (SHARED=OFF)
+make
+
+# Dynamic link — rebuilds gRPC/protobuf/abseil as shared libraries
+make SHARED=ON
 
 # Clean build artifacts
 make clean
@@ -36,13 +42,18 @@ Or manually:
 
 ```bash
 # Install Conan dependencies into the build directory
-conan install . --output-folder=cmake_build --build=missing -s compiler.cppstd=14 -s build_type=Release
+conan install . --output-folder=cmake_build --build=missing -s compiler.cppstd=14 -s:b compiler.cppstd=17 -s build_type=Release
 
 # Configure and build with CMake
 mkdir -p cmake_build && cd cmake_build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake ../
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_FROM_CONAN=ON ../
 make -j8
 ```
+
+### SHARED=ON vs SHARED=OFF
+
+- **`SHARED=OFF` (default)**: Conan installs static variants of gRPC/protobuf/abseil, and the SDK is linked statically into `my_program`. Runtime deps are just libstdc++/libc. Larger binary.
+- **`SHARED=ON`**: Passes `-o grpc/*:shared=True -o protobuf/*:shared=True -o abseil/*:shared=True` to Conan, which builds shared variants (may take longer the first time), and the SDK is linked dynamically. Smaller binary, but you must ship the `.so` files.
 
 ## Run
 
@@ -82,7 +93,7 @@ When you run `conan install`, it generates many files. **All of these are now pl
 
 **Source files (keep in version control):**
 - `CMakeLists.txt` - CMake configuration
-- `conanfile.txt` - Conan dependencies specification
+- `conanfile.py` - Conan dependencies specification
 - `build.sh` - Build script
 - `Makefile` - Make targets
 - `src/main.cpp` - Source code

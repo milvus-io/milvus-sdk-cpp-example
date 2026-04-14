@@ -20,6 +20,7 @@
 
 BUILD_OUTPUT_DIR="cmake_build"
 BUILD_TYPE="${BUILD_TYPE:-Debug}"
+SHARED="${SHARED:-ON}"
 
 if [[ ! -d ${BUILD_OUTPUT_DIR} ]]; then
   mkdir ${BUILD_OUTPUT_DIR}
@@ -34,7 +35,7 @@ make rebuild_cache >/dev/null 2>&1
 CMAKE_CMD="cmake \
 -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
 -DGRPC_PATH=${GRPC_PATH} \
--DBUILD_SHARED_LIBS=ON \
+-DBUILD_SHARED_LIBS=${SHARED} \
 -DBUILD_FROM_CONAN=OFF \
 ../"
 echo ${CMAKE_CMD}

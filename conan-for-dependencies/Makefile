@@ -15,7 +15,7 @@
 # limitations under the License.
 PWD 				:= $(shell pwd)
 BUILD_OUTPUT_DIR	:= cmake_build
-SHARED				?= ON
+SHARED				?= OFF
 
 .DEFAULT_GOAL := build
 
@@ -26,13 +26,17 @@ build:
 clean:
 	@echo "Cleaning ..."
 	@rm -fr $(BUILD_OUTPUT_DIR)
+	@rm -f CMakeUserPresets.json
 	@echo "Done"
 
 run:
 	@echo "Running ..."
-	# GRPC_VERBOSITY=ERROR and GLOG_minloglevel=3 silence the informational
+	# 1. GRPC_VERBOSITY=ERROR and GLOG_minloglevel=3 silence the informational
 	# startup logs from gRPC and Abseil (the "I0000 ..." lines printed to stderr
 	# before absl::InitializeLog() is called). Not errors, just noise.
-	@GRPC_VERBOSITY=ERROR GLOG_minloglevel=3 $(BUILD_OUTPUT_DIR)/my_program
+	# 2. conanrun.sh sets LD_LIBRARY_PATH to the Conan cache folders so that
+	# shared-library builds (SHARED=ON) can find their .so files at runtime.
+	# Harmless for static builds (SHARED=OFF).
+	@bash -c "source $(BUILD_OUTPUT_DIR)/conanrun.sh && GRPC_VERBOSITY=ERROR GLOG_minloglevel=3 $(BUILD_OUTPUT_DIR)/my_program"
 
 .PHONY: build clean run

@@ -1,6 +1,6 @@
 # Milvus SDK C++ Example - Without Conan
 
-This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) (v2.6.1) without a package manager. All dependencies are built from source via CMake FetchContent.
+This example demonstrates how to build a C++ application using the [Milvus C++ SDK](https://github.com/milvus-io/milvus-sdk-cpp) without a package manager. All dependencies are built from source via CMake FetchContent.
 
 ## Prerequisites
 
@@ -12,13 +12,18 @@ This example demonstrates how to build a C++ application using the [Milvus C++ S
 
 This example uses:
 - **BUILD_FROM_CONAN=OFF**: The milvus-sdk-cpp library builds all dependencies from source
-- **BUILD_SHARED_LIBS=ON**: Produces a shared library (`libmilvus_sdk.so`)
+- **BUILD_SHARED_LIBS**: Controlled by the `SHARED` make variable (default `ON`)
 
 ## Build Instructions
 
+`make` is equivalent to `make build`.
+
 ```bash
-# Build the project
-make build
+# Default: dynamic link (SHARED=ON)
+make
+
+# Static link
+make SHARED=OFF
 
 # Clean build artifacts
 make clean
@@ -47,7 +52,8 @@ make build
 By default, the build type is Debug. You can specify it:
 
 ```bash
-make build BUILD_TYPE=Release
+make BUILD_TYPE=Release
+make BUILD_TYPE=Release SHARED=OFF
 ```
 
 ## Run
@@ -70,11 +76,12 @@ Make sure you have an active Milvus server before running.
 
 1. **CMake FetchContent** downloads milvus-sdk-cpp from GitHub
 2. **milvus-sdk-cpp** is configured with `BUILD_FROM_CONAN=OFF`, so it builds all dependencies (gRPC, Protobuf, etc.) from source
-3. The example application links against the `milvus_sdk` shared library
+3. The example application links against the `milvus_sdk` library — `.so` when `SHARED=ON`, `.a` when `SHARED=OFF`. `target_link_libraries(my_program milvus_sdk)` in `CMakeLists.txt` works for both.
 
 ## Notes
 
 - The first build downloads and compiles gRPC and all its dependencies from source, which is significantly slower than subsequent builds.
-- The output of milvus-sdk-cpp is a shared library `libmilvus_sdk.so` under `cmake_build/_deps/milvus-sdk-build/src`. It dynamically links to gRPC libs.
-- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/v2.6.1/cmake/ThirdPartyPackages.cmake) in the SDK repo).
+- With `SHARED=ON` (default), the SDK output is `libmilvus_sdk.so` under `cmake_build/_deps/milvus-sdk-build/src`, and it dynamically links to the gRPC `.so` files.
+- With `SHARED=OFF`, the output is `libmilvus_sdk.a` and the final `my_program` is a single self-contained binary (larger size, no `.so` dependencies beyond libstdc++/libc).
+- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/v2.6.2/cmake/ThirdPartyPackages.cmake) in the SDK repo).
 
