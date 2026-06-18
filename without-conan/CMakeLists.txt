@@ -31,7 +31,7 @@ include(FetchContent)
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           v2.6.3
+    GIT_TAG           v2.6.4
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED FALSE
