@@ -83,5 +83,5 @@ Make sure you have an active Milvus server before running.
 - The first build downloads and compiles gRPC and all its dependencies from source, which is significantly slower than subsequent builds.
 - With `SHARED=ON` (default), the SDK output is `libmilvus_sdk.so` under `cmake_build/_deps/milvus-sdk-build/src`, and it dynamically links to the gRPC `.so` files.
 - With `SHARED=OFF`, the output is `libmilvus_sdk.a` and the final `my_program` is a single self-contained binary (larger size, no `.so` dependencies beyond libstdc++/libc).
-- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/v2.6.2/cmake/ThirdPartyPackages.cmake) in the SDK repo).
+- If you use a pre-installed gRPC, make sure its version is compatible with the version required by milvus-sdk-cpp (see the [ThirdPartyPackages.cmake](https://github.com/milvus-io/milvus-sdk-cpp/blob/v2.6.5/cmake/ThirdPartyPackages.cmake) in the SDK repo).
 

@@ -80,7 +80,7 @@ Or directly:
 
 ## How It Works
 
-1. **Conan** resolves `milvus-sdk-cpp/2.6.2` and all its transitive dependencies from the remote
+1. **Conan** resolves `milvus-sdk-cpp/2.6.5` and all its transitive dependencies from the remote
 2. **CMake** uses the Conan toolchain file to find the installed packages
 3. **`find_package(milvus_sdk)`** locates the SDK headers and libraries
 4. The example application links against `milvus_sdk` library

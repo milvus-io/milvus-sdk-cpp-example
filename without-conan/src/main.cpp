@@ -48,6 +48,7 @@ int
 main(int argc, char* argv[]) {
   try {
     printf("Example start...\n");
+    printf("[Include milvus-sdk-capp and its dependencies via CMake, very slow to rebuild after clean]\n");
 
     auto client = milvus::MilvusClientV2::Create();
 

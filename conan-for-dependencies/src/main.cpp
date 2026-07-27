@@ -48,6 +48,7 @@ int
 main(int argc, char* argv[]) {
   try {
     printf("Example start...\n");
+    printf("[Use Conan 2.x to manage dependencies of milvus-sdk-capp, include milvus-sdk-cpp via CMake, fast to rebuild from the second time]\n");
 
     auto client = milvus::MilvusClientV2::Create();
 

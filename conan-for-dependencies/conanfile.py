@@ -11,7 +11,9 @@ class MilvusSdkExample(ConanFile):
         self.requires("grpc/1.65.0")
         self.requires("protobuf/5.27.0")
         self.requires("abseil/20240116.2")
-        self.requires("nlohmann_json/3.11.3")
+
+        # from v2.6.5, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
+        # self.requires("nlohmann_json/3.11.3")
 
     def generate(self):
         deps = CMakeDeps(self)

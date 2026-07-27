@@ -27,10 +27,14 @@ endif ()
 include_guard(GLOBAL)
 
 # Find milvus-sdk-cpp installed by Conan
-find_package(milvus-sdk-cpp CONFIG REQUIRED)
+# (Break Change!) use find_package(milvus-sdk-cpp CONFIG REQUIRED) from v2.6.0 to v2.6.4,
+# and use find_package(milvus_sdk CONFIG REQUIRED) from >= v2.6.5
+find_package(milvus_sdk CONFIG REQUIRED)
 
 # Build example executable
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src src_files)
 add_executable(my_program ${src_files})
 
-target_link_libraries(my_program milvus-sdk-cpp::milvus-sdk-cpp)
+# (Break Change!) use target_link_libraries(my_program milvus-sdk-cpp::milvus-sdk-cpp) from v2.6.0 to v2.6.4,
+# and use target_link_libraries(my_program PRIVATE milvus_sdk::milvus_sdk) from >= v2.6.5
+target_link_libraries(my_program PRIVATE milvus_sdk::milvus_sdk)
