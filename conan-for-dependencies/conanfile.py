@@ -12,7 +12,7 @@ class MilvusSdkExample(ConanFile):
         self.requires("protobuf/5.27.0")
         self.requires("abseil/20240116.2")
 
-        # from v2.6.5, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
+        # from v3.0.1, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
         # self.requires("nlohmann_json/3.11.3")
 
     def generate(self):

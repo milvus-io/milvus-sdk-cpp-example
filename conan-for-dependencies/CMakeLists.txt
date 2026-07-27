@@ -34,7 +34,7 @@ find_package(gRPC CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
 
-# (Break Change!) from v2.6.5, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
+# (Break Change!) from v3.0.1, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
 # find_package(nlohmann_json CONFIG REQUIRED)
 
 message(STATUS "Using Conan-provided packages:")
@@ -47,7 +47,7 @@ include(FetchContent)
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           v2.6.5
+    GIT_TAG           v3.0.1
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED TRUE
