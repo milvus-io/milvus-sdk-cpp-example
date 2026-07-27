@@ -31,7 +31,7 @@ include(FetchContent)
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           v2.6.4
+    GIT_TAG           v2.6.5
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED FALSE
@@ -49,5 +49,4 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src src_files)
 add_executable(my_program ${src_files})
 
 
-target_link_libraries(my_program milvus_sdk)
-
+target_link_libraries(my_program PRIVATE milvus_sdk)

@@ -48,6 +48,7 @@ int
 main(int argc, char* argv[]) {
   try {
     printf("Example start...\n");
+    printf("[Include milvus-sdk-cpp and its dependencies via Conan 2.x, very fast to rebuild from the second time]\n");
 
     auto client = milvus::MilvusClientV2::Create();
 

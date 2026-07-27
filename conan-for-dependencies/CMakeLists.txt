@@ -33,20 +33,21 @@ set(BUILD_FROM_CONAN ON CACHE BOOL "Build from conan" FORCE)
 find_package(gRPC CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)
 find_package(absl CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
+
+# (Break Change!) from v2.6.5, nlohmann_json is depends as a built-in dependency of milvus, so we don't need to require it explicitly.
+# find_package(nlohmann_json CONFIG REQUIRED)
 
 message(STATUS "Using Conan-provided packages:")
 message(STATUS "  gRPC found: ${gRPC_FOUND}")
 message(STATUS "  Protobuf found: ${Protobuf_FOUND}")
 message(STATUS "  Abseil found: ${absl_FOUND}")
-message(STATUS "  nlohmann_json found: ${nlohmann_json_FOUND}")
 
 include(FetchContent)
 
 FetchContent_Declare(
     milvus-sdk
     GIT_REPOSITORY    https://github.com/milvus-io/milvus-sdk-cpp.git
-    GIT_TAG           v2.6.4
+    GIT_TAG           v2.6.5
     GIT_SHALLOW       TRUE
     GIT_PROGRESS      TRUE
     UPDATE_DISCONNECTED TRUE
@@ -62,4 +63,4 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src src_files)
 add_executable(my_program ${src_files})
 
 # Link to milvus_sdk - it will bring all dependencies
-target_link_libraries(my_program milvus_sdk)
+target_link_libraries(my_program PRIVATE milvus_sdk)
