@@ -48,7 +48,7 @@ make run
 ```
 
 ### Conan Managed (SDK as a Conan package)
-Requires `milvus-sdk-cpp/3.0.1` published to a Conan remote.
+Requires `milvus-sdk-cpp/3.0.2` published to a Conan remote.
 ```bash
 cd conan-managed
 make                  # default: SHARED=OFF (static link)

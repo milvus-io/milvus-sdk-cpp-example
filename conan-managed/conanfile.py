@@ -9,7 +9,7 @@ class MilvusSdkExample(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
 
     def requirements(self):
-        self.requires("milvus-sdk-cpp/3.0.1@milvus/dev")
+        self.requires("milvus-sdk-cpp/3.0.2@milvus/dev")
 
     def generate(self):
         deps = CMakeDeps(self)
